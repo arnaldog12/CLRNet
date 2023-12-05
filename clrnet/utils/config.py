@@ -96,7 +96,7 @@ class Config:
         if filename.endswith('.py'):
             with tempfile.TemporaryDirectory() as temp_config_dir:
                 temp_config_file = tempfile.NamedTemporaryFile(
-                    dir=temp_config_dir, suffix='.py')
+                    dir=temp_config_dir, suffix='.py', delete=False)
                 temp_config_name = osp.basename(temp_config_file.name)
                 shutil.copyfile(filename,
                                 osp.join(temp_config_dir, temp_config_name))
