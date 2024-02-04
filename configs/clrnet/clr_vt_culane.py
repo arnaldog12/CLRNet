@@ -14,7 +14,8 @@ heads = dict(
     type="CLRHead",
     num_priors=192,
     refine_layers=3,
-    fc_hidden_dim=64,
+    prior_feat_channels=1,
+    fc_hidden_dim=1,
     sample_points=36,
 )
 
@@ -27,8 +28,8 @@ work_dirs = "work_dirs/clr/vt_culane"
 
 neck = dict(
     type="FPN",
-    in_channels=[128, 256, 512],
-    out_channels=64,
+    in_channels=[1, 1, 1],
+    out_channels=1,
     num_outs=3,
     attention=False,
 )
@@ -48,8 +49,8 @@ save_ep = 10
 img_norm = dict(mean=[103.939, 116.779, 123.68], std=[1.0, 1.0, 1.0])
 ori_img_w = 1640
 ori_img_h = 590
-img_w = 800
-img_h = 320
+img_w = 224
+img_h = 224
 cut_height = 270
 
 train_process = [
@@ -134,7 +135,7 @@ dataset = dict(
     ),
 )
 
-workers = 10
+workers = 0
 log_interval = 1000
 # seed = 0
 num_classes = 4 + 1
