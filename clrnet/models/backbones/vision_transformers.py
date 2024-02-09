@@ -25,8 +25,8 @@ class VisionTransformerWrapper(nn.Module):
         self.model.encoder.layers.encoder_layer_3.register_forward_hook(get_activation('encoder_layer_3'))
         output = self.model(x)
         return [
-            activation['encoder_layer_0'][:, None, :, :],
-            activation['encoder_layer_1'][:, None, :, :],
-            activation['encoder_layer_2'][:, None, :, :],
-            activation['encoder_layer_3'][:, None, :, :],
+            activation['encoder_layer_0'][:, 1:, :].reshape(-1, 14, 14, 768).permute(0, 3, 1, 2),
+            activation['encoder_layer_1'][:, 1:, :].reshape(-1, 14, 14, 768).permute(0, 3, 1, 2),
+            activation['encoder_layer_2'][:, 1:, :].reshape(-1, 14, 14, 768).permute(0, 3, 1, 2),
+            activation['encoder_layer_3'][:, 1:, :].reshape(-1, 14, 14, 768).permute(0, 3, 1, 2),
         ]

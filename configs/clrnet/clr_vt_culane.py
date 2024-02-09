@@ -14,8 +14,8 @@ heads = dict(
     type="CLRHead",
     num_priors=192,
     refine_layers=3,
-    prior_feat_channels=1,
-    fc_hidden_dim=1,
+    # prior_feat_channels=1,
+    # fc_hidden_dim=1,
     sample_points=36,
 )
 
@@ -28,8 +28,8 @@ work_dirs = "work_dirs/clr/vt_culane"
 
 neck = dict(
     type="FPN",
-    in_channels=[1, 1, 1],
-    out_channels=1,
+    in_channels=[768, 768, 768],
+    out_channels=64,
     num_outs=3,
     attention=False,
 )
