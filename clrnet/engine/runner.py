@@ -93,6 +93,7 @@ class Runner(object):
             if (epoch +
                     1) % self.cfg.save_ep == 0 or epoch == self.cfg.epochs - 1:
                 self.save_ckpt()
+            # self.save_ckpt() # Always save after each epoch 
             if (epoch +
                     1) % self.cfg.eval_ep == 0 or epoch == self.cfg.epochs - 1:
                 self.validate()
