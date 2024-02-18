@@ -15,10 +15,12 @@ class VisionTransformerWrapper(nn.Module):
         self.cfg = cfg
         self.processor = DPTImageProcessor.from_pretrained(PRETRAINED_CHECKPOINT)
         self.model = DPTModel.from_pretrained(PRETRAINED_CHECKPOINT)
+        self.model.to(torch.device('cuda'))
 
     def forward(self, x):
         inputs = self.processor(images=x, return_tensors="pt")
+        inputs.to(torch.device('cuda'))
         with torch.no_grad():
             outputs = self.model(**inputs)
             last_hidden_state = outputs.last_hidden_state
-        return last_hidden_state[:, 1:, :].reshape(-1, 24, 24, 1024).permute(0, 3, 1, 2)
+        return [last_hidden_state[:, 1:, :].reshape(-1, 24, 24, 1024).permute(0, 3, 1, 2)]
