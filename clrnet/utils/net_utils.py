@@ -3,21 +3,39 @@ import os
 from torch import nn
 import numpy as np
 import torch.nn.functional
+import datetime
 
-
+# def save_model(net, optim, scheduler, recorder, is_best=False):
+#     model_dir = os.path.join(recorder.work_dir, 'ckpt')
+#     os.makedirs(model_dir, exist_ok=True)  # Replaces the os.system call
+#     # os.system('mkdir -p {}'.format(model_dir))
+#     epoch = recorder.epoch
+#     ckpt_name = 'best' if is_best else epoch
+#     torch.save(
+#         {
+#             'net': net.state_dict(),
+#             'optim': optim.state_dict(),
+#             'scheduler': scheduler.state_dict(),
+#             'recorder': recorder.state_dict(),
+#             'epoch': epoch
+#         }, os.path.join(model_dir, '{}.pth'.format(ckpt_name)))
+       
 def save_model(net, optim, scheduler, recorder, is_best=False):
     model_dir = os.path.join(recorder.work_dir, 'ckpt')
-    os.system('mkdir -p {}'.format(model_dir))
+    os.makedirs(model_dir, exist_ok=True)
     epoch = recorder.epoch
-    ckpt_name = 'best' if is_best else epoch
+    timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    ckpt_name = f"{timestamp}-epoch-{epoch}" if not is_best else 'best'
+    ckpt_path = os.path.join(model_dir, f'{ckpt_name}.pth')
     torch.save(
         {
-            'net': net.state_dict(),
+            'net': net.module.state_dict(),  # Make sure to save the underlying model if it's wrapped in DataParallel
             'optim': optim.state_dict(),
             'scheduler': scheduler.state_dict(),
             'recorder': recorder.state_dict(),
             'epoch': epoch
-        }, os.path.join(model_dir, '{}.pth'.format(ckpt_name)))
+        }, ckpt_path)
+    print(f"Checkpoint saved to {ckpt_path}")
 
 
 def load_network_specified(net, model_dir, logger=None):
