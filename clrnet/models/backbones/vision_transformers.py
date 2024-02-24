@@ -1,11 +1,20 @@
-import torch
 from torch import nn
-from torchvision.models.vision_transformer import VisionTransformer
-from transformers import DPTImageProcessor, DPTModel
+from torchvision.models.vision_transformer import (
+    VisionTransformer,
+    ViT_B_16_Weights,
+    vit_b_16,
+)
 
 from clrnet.models.registry import BACKBONES
 
-PRETRAINED_CHECKPOINT = "Intel/dpt-large"
+activation = {}
+
+
+def get_activation(name):
+    def hook(model, input, output):
+        activation[name] = output.detach()
+
+    return hook
 
 
 @BACKBONES.register_module
@@ -13,12 +22,33 @@ class VisionTransformerWrapper(nn.Module):
     def __init__(self, cfg=None):
         super(VisionTransformerWrapper, self).__init__()
         self.cfg = cfg
-        self.processor = DPTImageProcessor.from_pretrained(PRETRAINED_CHECKPOINT)
-        self.model = DPTModel.from_pretrained(PRETRAINED_CHECKPOINT)
+        self.model = vit_b_16(weights=ViT_B_16_Weights.IMAGENET1K_V1)
 
     def forward(self, x):
-        inputs = self.processor(images=x, return_tensors="pt")
-        with torch.no_grad():
-            outputs = self.model(**inputs)
-            last_hidden_state = outputs.last_hidden_state
-        return last_hidden_state[:, 1:, :].reshape(-1, 24, 24, 1024).permute(0, 3, 1, 2)
+        self.model.encoder.layers.encoder_layer_0.register_forward_hook(
+            get_activation("encoder_layer_0")
+        )
+        self.model.encoder.layers.encoder_layer_1.register_forward_hook(
+            get_activation("encoder_layer_1")
+        )
+        self.model.encoder.layers.encoder_layer_2.register_forward_hook(
+            get_activation("encoder_layer_2")
+        )
+        self.model.encoder.layers.encoder_layer_3.register_forward_hook(
+            get_activation("encoder_layer_3")
+        )
+        output = self.model(x)
+        return [
+            activation["encoder_layer_0"][:, 1:, :]
+            .reshape(-1, 14, 14, 768)
+            .permute(0, 3, 1, 2),
+            activation["encoder_layer_1"][:, 1:, :]
+            .reshape(-1, 14, 14, 768)
+            .permute(0, 3, 1, 2),
+            activation["encoder_layer_2"][:, 1:, :]
+            .reshape(-1, 14, 14, 768)
+            .permute(0, 3, 1, 2),
+            activation["encoder_layer_3"][:, 1:, :]
+            .reshape(-1, 14, 14, 768)
+            .permute(0, 3, 1, 2),
+        ]
