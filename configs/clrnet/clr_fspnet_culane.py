@@ -1,6 +1,7 @@
 net = dict(
     type="Detector",
 )
+ckpt = "work_dirs/fspnet/base_patch16_384.pth"
 
 backbone = dict(
     type="FSPNetWrapper",
@@ -28,16 +29,16 @@ work_dirs = "work_dirs/clr/vt_culane"
 
 neck = dict(
     type="FPN",
-    in_channels=[1024],
+    in_channels=[1, 1, 1, 1],
     out_channels=64,
-    num_outs=1,
+    num_outs=4,
     attention=False,
 )
 
 test_parameters = dict(conf_threshold=0.4, nms_thres=50, nms_topk=max_lanes)
 
 epochs = 15
-batch_size = 24
+batch_size = 8
 
 optimizer = dict(type="AdamW", lr=0.6e-3)  # 3e-4 for batchsize 8
 total_iter = (88880 // batch_size) * epochs

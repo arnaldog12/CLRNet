@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-import vit
+from clrnet.models.backbones.fspnet_model import vit
 
 
 class GCN(nn.Module):

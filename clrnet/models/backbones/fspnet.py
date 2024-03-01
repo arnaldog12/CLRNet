@@ -1,6 +1,6 @@
 from torch import nn
 
-from clrnet.models.backbones.fspnet.FSPNet_model import FSPNet
+from clrnet.models.backbones.fspnet_model.FSPNet_model import FSPNet
 from clrnet.models.registry import BACKBONES
 
 
@@ -12,4 +12,4 @@ class FSPNetWrapper(nn.Module):
         self.model = FSPNet(cfg.ckpt, cfg.img_h)
 
     def forward(self, x):
-        return [self.model.forward(x)]
+        return self.model.forward(x)
