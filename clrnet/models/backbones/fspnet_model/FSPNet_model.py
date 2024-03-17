@@ -1,6 +1,8 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+
+from clrnet.models.backbones.dla34 import DLAWrapper
 from clrnet.models.backbones.fspnet_model import vit
 
 
@@ -216,12 +218,15 @@ class OutPut(nn.Module):
 class FSPNet(nn.Module):
     def __init__(self, ckpt, img_size=384):
         super(FSPNet, self).__init__()
-        self.encoder = vit.deit_base_distilled_patch16_384()
-        if ckpt is not None:
-            ckpt = torch.load(ckpt, map_location="cpu")
-            msg = self.encoder.load_state_dict(ckpt["model"], strict=False)
-            print("====================================")
-            print(msg)
+        # self.encoder = vit.deit_base_distilled_patch16_384()
+        self.encoder = DLAWrapper()
+        print("-------------- encoder")
+        print(self.encoder)
+        # if ckpt is not None:
+        #     ckpt = torch.load(ckpt, map_location="cpu")
+        #     msg = self.encoder.load_state_dict(ckpt["model"], strict=False)
+        #     print("====================================")
+        #     print(msg)
 
         self.img_size = img_size
         self.vit_chs = 768
