@@ -50,8 +50,8 @@ save_ep = 10
 img_norm = dict(mean=[103.939, 116.779, 123.68], std=[1.0, 1.0, 1.0])
 ori_img_w = 1280
 ori_img_h = 720
-img_h = 320
-img_w = 800
+img_h = 384
+img_w = 384
 cut_height = 270
 
 train_process = [

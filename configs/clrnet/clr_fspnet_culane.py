@@ -25,7 +25,7 @@ cls_loss_weight = 2.0
 xyt_loss_weight = 0.2
 seg_loss_weight = 1.0
 
-work_dirs = "work_dirs/clr/vt_culane"
+work_dirs = "work_dirs/clr/dla34fspnet_culane"
 
 neck = dict(
     type="FPN",
@@ -37,15 +37,15 @@ neck = dict(
 
 test_parameters = dict(conf_threshold=0.4, nms_thres=50, nms_topk=max_lanes)
 
-epochs = 15
+epochs = 40
 batch_size = 8
 
-optimizer = dict(type="AdamW", lr=0.6e-3)  # 3e-4 for batchsize 8
+optimizer = dict(type="AdamW", lr=0.0003)  # 3e-4 for batchsize 8
 total_iter = (88880 // batch_size) * epochs
 scheduler = dict(type="CosineAnnealingLR", T_max=total_iter)
 
 eval_ep = 1
-save_ep = 10
+save_ep = 1
 
 img_norm = dict(mean=[103.939, 116.779, 123.68], std=[1.0, 1.0, 1.0])
 ori_img_w = 1640

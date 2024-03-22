@@ -115,7 +115,6 @@ val_process = [
 
 dataset_path = "./data/llamas"
 dataset_type = "LLAMAS"
-test_json_file = "data/tusimple/test_label.json"
 dataset = dict(
     train=dict(
         type=dataset_type,
@@ -137,7 +136,7 @@ dataset = dict(
     ),
 )
 
-workers = 10
+workers = 0
 log_interval = 100
 # seed = 0
 num_classes = 4 + 1
