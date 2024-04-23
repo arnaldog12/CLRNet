@@ -131,6 +131,8 @@ class Runner(object):
                                                is_train=False)
         self.net.eval()
         predictions = []
+
+        start = time.time()
         for i, data in enumerate(tqdm(self.val_loader, desc=f'Validate')):
             data = self.to_cuda(data)
             with torch.no_grad():
@@ -139,6 +141,11 @@ class Runner(object):
                 predictions.extend(output)
             if self.cfg.view:
                 self.val_loader.dataset.view(output, data['meta'])
+
+        end = time.time()
+        elapsed = end - start
+        avg_time = elapsed / len(predictions)
+        print("avg_time:", avg_time)
 
         metric = self.val_loader.dataset.evaluate(predictions,
                                                   self.cfg.work_dir)
