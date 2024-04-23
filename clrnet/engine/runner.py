@@ -15,6 +15,7 @@ from clrnet.datasets import build_dataloader
 from clrnet.utils.recorder import build_recorder
 from clrnet.utils.net_utils import save_model, load_network, resume_network
 from mmcv.parallel import MMDataParallel
+from ptflops import get_model_complexity_info
 
 
 class Runner(object):
@@ -34,6 +35,11 @@ class Runner(object):
         self.metric = 0.
         self.val_loader = None
         self.test_loader = None
+
+        macs, params = get_model_complexity_info(self.net, (3, cfg.img_h, cfg.img_w), as_strings=True, print_per_layer_stat=True, verbose=True)
+        print('{:<30}  {:<8}'.format('Computational complexity: ', macs))
+        print('{:<30}  {:<8}'.format('Number of parameters: ', params))
+
 
     def to_cuda(self, batch):
         for k in batch:
@@ -134,6 +140,9 @@ class Runner(object):
 
         start = time.time()
         for i, data in enumerate(tqdm(self.val_loader, desc=f'Validate')):
+            if i == 50:
+                break
+
             data = self.to_cuda(data)
             with torch.no_grad():
                 output = self.net(data)
