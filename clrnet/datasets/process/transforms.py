@@ -293,6 +293,22 @@ class Normalize(object):
         return sample
 
 
+@PROCESS.register_module
+class EdgeDetection(object):
+    def __init__(self, cfg=None):
+        pass
+
+    def __call__(self, sample): 
+        img = sample['img']
+        img_gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+        img_blur = cv2.GaussianBlur(img_gray, (3, 3), 0)
+
+        # Sobel Edge Detection
+        sobelxy = cv2.Sobel(src=img_blur, ddepth=cv2.CV_64F, dx=1, dy=1, ksize=5)
+        sample['img'] = sobelxy
+
+        return sample
+
 def CLRTransforms(img_h, img_w):
     return [
         dict(name='Resize',

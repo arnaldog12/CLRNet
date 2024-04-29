@@ -93,6 +93,10 @@ train_process = [
                 parameters=dict(size=dict(height=img_h, width=img_w)),
                 p=1.0,
             ),
+            dict(
+                name="EdgeDetection",
+                p=1.0,
+            ),
         ],
     ),
     dict(type="ToTensor", keys=["img", "lane_line", "seg"]),
