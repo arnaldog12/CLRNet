@@ -25,7 +25,7 @@ cls_loss_weight = 2.0
 xyt_loss_weight = 0.2
 seg_loss_weight = 1.0
 
-work_dirs = "work_dirs/clr/dla34fspnet_culane"
+work_dirs = "work_dirs/clr/fspnet_culane"
 
 neck = dict(
     type="FPN",
@@ -89,12 +89,13 @@ train_process = [
                 p=0.7,
             ),
             dict(
-                name="Resize",
-                parameters=dict(size=dict(height=img_h, width=img_w)),
+                name="Canny",
+                parameters=dict(alpha=(0.5, 1.0), sobel_kernel_size=[3, 7]),
                 p=1.0,
             ),
             dict(
-                name="EdgeDetection",
+                name="Resize",
+                parameters=dict(size=dict(height=img_h, width=img_w)),
                 p=1.0,
             ),
         ],
@@ -106,6 +107,11 @@ val_process = [
     dict(
         type="GenerateLaneLine",
         transforms=[
+            dict(
+                name="Canny",
+                parameters=dict(alpha=(0.5, 1.0), sobel_kernel_size=[3, 7]),
+                p=1.0,
+            ),
             dict(
                 name="Resize",
                 parameters=dict(size=dict(height=img_h, width=img_w)),

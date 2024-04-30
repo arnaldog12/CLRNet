@@ -89,6 +89,11 @@ train_process = [
                 p=0.7,
             ),
             dict(
+                name="Canny",
+                parameters=dict(alpha=(0.5, 1.0), sobel_kernel_size=[3, 7]),
+                p=1.0,
+            ),
+            dict(
                 name="Resize",
                 parameters=dict(size=dict(height=img_h, width=img_w)),
                 p=1.0,
@@ -102,6 +107,11 @@ val_process = [
     dict(
         type="GenerateLaneLine",
         transforms=[
+            dict(
+                name="Canny",
+                parameters=dict(alpha=(0.5, 1.0), sobel_kernel_size=[3, 7]),
+                p=1.0,
+            ),
             dict(
                 name="Resize",
                 parameters=dict(size=dict(height=img_h, width=img_w)),
