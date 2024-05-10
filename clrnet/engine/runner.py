@@ -140,8 +140,8 @@ class Runner(object):
 
         start = time.time()
         for i, data in enumerate(tqdm(self.val_loader, desc=f'Validate')):
-            if i == 50:
-                break
+            # if i == 50:
+            #     break
 
             data = self.to_cuda(data)
             with torch.no_grad():

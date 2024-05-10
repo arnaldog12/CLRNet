@@ -25,22 +25,22 @@ cls_loss_weight = 2.0
 xyt_loss_weight = 0.2
 seg_loss_weight = 1.0
 
-work_dirs = "work_dirs/clr/fspnet_culane"
+work_dirs = "work_dirs/clr/FSPNet_culane"
 
 neck = dict(
     type="FPN",
-    in_channels=[1, 1, 1, 1],
+    in_channels=[768] * 12,
     out_channels=64,
-    num_outs=4,
+    num_outs=12,
     attention=False,
 )
 
 test_parameters = dict(conf_threshold=0.4, nms_thres=50, nms_topk=max_lanes)
 
-epochs = 40
+epochs = 60
 batch_size = 8
 
-optimizer = dict(type="AdamW", lr=0.0003)  # 3e-4 for batchsize 8
+optimizer = dict(type="AdamW", lr=0.3e-4)  # 3e-4 for batchsize 8
 total_iter = (88880 // batch_size) * epochs
 scheduler = dict(type="CosineAnnealingLR", T_max=total_iter)
 
@@ -64,21 +64,21 @@ train_process = [
                 p=1.0,
             ),
             dict(name="HorizontalFlip", parameters=dict(p=1.0), p=0.5),
-            dict(name="ChannelShuffle", parameters=dict(p=1.0), p=0.1),
-            dict(
-                name="MultiplyAndAddToBrightness",
-                parameters=dict(mul=(0.85, 1.15), add=(-10, 10)),
-                p=0.6,
-            ),
-            dict(name="AddToHueAndSaturation", parameters=dict(value=(-10, 10)), p=0.7),
-            dict(
-                name="OneOf",
-                transforms=[
-                    dict(name="MotionBlur", parameters=dict(k=(3, 5))),
-                    dict(name="MedianBlur", parameters=dict(k=(3, 5))),
-                ],
-                p=0.2,
-            ),
+            # dict(name="ChannelShuffle", parameters=dict(p=1.0), p=0.1),
+            # dict(
+            #     name="MultiplyAndAddToBrightness",
+            #     parameters=dict(mul=(0.85, 1.15), add=(-10, 10)),
+            #     p=0.6,
+            # ),
+            # dict(name="AddToHueAndSaturation", parameters=dict(value=(-10, 10)), p=0.7),
+            # dict(
+            #     name="OneOf",
+            #     transforms=[
+            #         dict(name="MotionBlur", parameters=dict(k=(3, 5))),
+            #         dict(name="MedianBlur", parameters=dict(k=(3, 5))),
+            #     ],
+            #     p=0.2,
+            # ),
             dict(
                 name="Affine",
                 parameters=dict(

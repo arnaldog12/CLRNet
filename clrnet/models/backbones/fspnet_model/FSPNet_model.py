@@ -97,7 +97,7 @@ class Converter(nn.Module):
                 f1_Q, f1_proj_reshaped.permute(0, 2, 1)
             )  # [16,384,16] Ta
 
-            f1_n_rel = self.gcn_f1(f1_n_state)  # [16,384,16]
+            f1_n_rel = f1_n_state  # [16,384,16]
             f1_state_reshaped = torch.matmul(
                 f1_n_rel, f1_rproj_reshaped
             )  # [16,384,576]
@@ -128,7 +128,7 @@ class Converter(nn.Module):
                 f2_Q, f2_proj_reshaped.permute(0, 2, 1)
             )  # [16,384,16]
 
-            f2_n_rel = self.gcn_f2(f2_n_state)  # [16,384,16]
+            f2_n_rel = f2_n_state  # [16,384,16]
             f2_state_reshaped = torch.matmul(
                 f2_n_rel, f2_rproj_reshaped
             )  # [16,384,576]
@@ -310,5 +310,5 @@ class FSPNet(nn.Module):
         B, C, H, W = img.size()
         x = self.encoder(img)  # list 12x[8,576,768]
         feature = self.group_converter_fn(x)
-        gpd_outs = self.group_pyramid_decode(feature)
-        return self.pred_out(gpd_outs)
+        # gpd_outs = self.group_pyramid_decode(feature)
+        return feature
