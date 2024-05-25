@@ -311,4 +311,5 @@ class FSPNet(nn.Module):
         x = self.encoder(img)  # list 12x[8,576,768]
         feature = self.group_converter_fn(x)
         # gpd_outs = self.group_pyramid_decode(feature)
+        print("--- feature shape:", feature.shape)
         return feature

@@ -164,4 +164,8 @@ class FPN(nn.Module):
                         outs.append(self.fpn_convs[i](F.relu(outs[-1])))
                     else:
                         outs.append(self.fpn_convs[i](outs[-1]))
+        
+        for out in tuple(outs):
+            print("--- out shape:", out.shape)
+            
         return tuple(outs)

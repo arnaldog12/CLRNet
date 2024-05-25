@@ -274,6 +274,8 @@ class CLRHead(nn.Module):
             output = {'predictions_lists': predictions_lists, 'seg': seg}
             return self.loss(output, kwargs['batch'])
 
+        print("--- prediction_lists:", predictions_lists[-1])
+        print("--- prediction_lists.shape:", predictions_lists[-1].shape)
         return predictions_lists[-1]
 
     def predictions_to_pred(self, predictions):
